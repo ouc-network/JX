@@ -1,0 +1,127 @@
+.container{
+  background-color: #eeeeee;
+  height : 100vh;
+}
+.partOne {
+  
+  justify-content: space-between;
+  background-color: #a7d3e8;
+  width: 800rpx;
+  padding-top: 130rpx;
+  padding-bottom: 130rpx;
+}
+.userinfo {
+  display: flex;
+  align-items: center;
+  height: 128rpx;
+  margin-left: 40rpx;
+  color: rgb(255, 255, 255);
+}
+
+.userinfo-avatar {
+  overflow: hidden;
+  width: 128rpx;
+  height: 128rpx;
+  margin: 30rpx;
+  border-radius: 50%;
+}
+.userinfo-nickname {
+  height: 128rpx;
+}
+.partOne .scanicon{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 128rpx;
+  margin-right: 80rpx;
+}
+.partOne .scanicon image{
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.partTwo{
+  height: 120rpx;
+  width: 43%;
+  margin-left: -350rpx;
+  margin-top: -200rpx;
+  background-color: #ffffff;
+  border: 1rpx solid rgb(176, 176, 176);
+  border-radius: 25rpx;
+}
+.partTwo .item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100rpx;
+}
+.partTwo .item .itemname{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 210rpx;
+  margin-left: 20rpx;
+}
+.partTwo .item .itemname image{
+  align-items: center;
+  margin-top: 30rpx;
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.partTwo .item .itemname text{
+  font-size: 10px;
+  color: #4682B4;
+}
+.partTwo .right{
+  margin-right: 20rpx;
+}
+.partTwo .right image{
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.partTwo .scan{
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+}
+
+.partTwoR {
+  height: 120rpx;
+  width: 45%;
+  margin-left: 340rpx;
+  margin-top: -123rpx;
+  background-color: #ffffff;
+  border: 1rpx solid rgb(176, 176, 176);
+  border-radius: 25rpx;
+}
+.partTwoR .item .itemname {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 210rpx;
+  margin-left: 20rpx;
+}
+.partTwoR .item .itemname image{
+  align-items: center;
+  margin-top: 25rpx;
+  margin-left: -5rpx;
+  width: 50rpx;
+  height: 50rpx;
+}
+.partTwoR .item .itemname text{
+  font-size: 10px;
+  color: #4682B4;
+}
+
+.partThree{
+  height: 600rpx;
+  width: 90%;
+  margin-left: 1%;
+  margin-top: 10rpx;
+  background-color: #ffffff;
+  border: 1rpx solid rgb(176, 176, 176);
+  border-radius: 25rpx;
+}
+

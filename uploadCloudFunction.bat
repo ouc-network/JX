@@ -1,0 +1,1 @@
+"D:\Dwonload_JX\微信开发者工具\微信web开发者工具\cli.bat" cloud functions deploy --e cloud1-5gdutm392c7f1535 --n quickstartFunctions --r --project "D:\AAA中国海洋大学\11111111111——2023秋\计网\计网实验\实验四（小程序）" --report_first --report
