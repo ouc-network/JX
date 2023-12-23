@@ -1,0 +1,2 @@
+<!--pages/login/login.wxml-->
+<button bindtap="getUserInfo">请点击这里进行登录</button>

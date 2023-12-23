@@ -1,0 +1,72 @@
+<view class='container'>
+
+  <!--头像名称-->
+  <view class="partOne">
+    <view class="userinfo">
+      <block wx:if="{{canIUseOpenData}}">
+        <view class="userinfo-avatar">
+          <open-data type="userAvatarUrl"></open-data>
+        </view>
+        <open-data type="userNickName"></open-data>
+      </block>
+      <block wx:elif="{{!hasUserInfo}}">
+        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
+        <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+        <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+      </block>
+      <block wx:else>
+        <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
+    </view>
+
+    <view class="scanicon">
+      <image src="../../images/scan.png" />
+    </view>
+  </view>
+
+  <!--我的积分-->
+  <view class="partTwo">
+    <!--我的分值-->
+    <view class="item">
+      <view class="itemname">
+        <image class="icon" src="../../ico/积分.ico"></image>
+        <view><text class="title">score</text></view>
+      </view>
+      <view class="right">
+        <image src="../../images/right.png" />
+      </view>
+      <view><text>{{score}}</text></view>
+    </view>
+  </view>
+  <view class="partTwoR">
+    <!--今日任务总数-->
+    <view class="item">
+      <view class="itemname">
+        <image class="icon" src="../../ico/完成任务.ico"></image>
+        <view><text class="title">task</text></view>
+      </view>
+      <!-- 这个字体放在partTwoR是可以显示的，这里无法显示应该是css的问题 -->
+      <view><text>{{task_number_done}}/{{task_number_done}}</text></view>
+    </view>
+  </view>
+  <!--活力图-->
+  <view class="partThree">
+    <!-- <div id="container">
+      <div class="item" wx:for="123456789101112131415">{{item}}</div>
+    </div> -->
+    <div class="container-card">
+      <ul class="graph">
+        <div class="item" wx:for="123456789">{{item}}</div>
+        <!-- <el-tooltip class="item" effect="dark" :content="item.year + '-' + item.month + '-' + item.date" placement="top-start" wx:for="(item, index) in infos" :key="index" :open-delay="500">
+          <li :data-level="item.level" class="li-day" :isToday="item.isToday"></li>
+        </el-tooltip> -->
+      </ul>
+
+      <ul class="months">
+        <li class="li-month" v-for="(item,index) in monthBar" :key="index">{{item}}</li>
+      </ul>
+    </div>
+
+  </view>
+</view>
