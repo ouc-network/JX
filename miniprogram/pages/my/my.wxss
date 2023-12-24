@@ -69,32 +69,30 @@
   height: 50rpx;
 }
 
-.partTwo .item .itemname text{
+.partTwo .item .itemname .title{
   font-size: 10px;
   color: #4682B4;
 }
-.partTwo .right{
-  margin-right: 20rpx;
+.partTwo .item .score{
+  font-size: 40px;
+  padding:100rpx;
+  color: #4682B4;
 }
-.partTwo .right image{
-  width: 50rpx;
-  height: 50rpx;
-}
-
-.partTwo .scan{
-  display: flex;
-  align-items: center;
-  height: 100rpx;
-}
-
 .partTwoR {
   height: 120rpx;
-  width: 45%;
-  margin-left: 340rpx;
+  width: 43%;
+  margin-left: 345rpx;
   margin-top: -123rpx;
   background-color: #ffffff;
   border: 1rpx solid rgb(176, 176, 176);
   border-radius: 25rpx;
+}
+.partTwoR .item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100rpx;
+  flex-direction: row;
 }
 .partTwoR .item .itemname {
   display: flex;
@@ -110,9 +108,15 @@
   width: 50rpx;
   height: 50rpx;
 }
-.partTwoR .item .itemname text{
+.partTwoR .item .itemname .title{
   font-size: 10px;
   color: #4682B4;
+}
+.partTwoR .item .task_num{
+  color: #4682B4;
+  font-size: 40px;
+  padding:80rpx;
+  
 }
 
 .partThree{

@@ -33,10 +33,8 @@
         <image class="icon" src="../../ico/积分.ico"></image>
         <view><text class="title">score</text></view>
       </view>
-      <view class="right">
-        <image src="../../images/right.png" />
-      </view>
-      <view><text>{{score}}</text></view>
+      
+      <view><text class="score">{{score}}</text></view>
     </view>
   </view>
   <view class="partTwoR">
@@ -45,9 +43,11 @@
       <view class="itemname">
         <image class="icon" src="../../ico/完成任务.ico"></image>
         <view><text class="title">task</text></view>
+        
       </view>
       <!-- 这个字体放在partTwoR是可以显示的，这里无法显示应该是css的问题 -->
-      <view><text>{{task_number_done}}/{{task_number_done}}</text></view>
+      
+      <view><text class="task_num">{{task_number_done}}/{{task_number_done}}</text></view>
     </view>
   </view>
   <!--活力图-->
