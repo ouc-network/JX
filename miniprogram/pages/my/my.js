@@ -1,5 +1,9 @@
 // pages/my/my.js
 var openid
+var score = 0
+var task_number=1
+var task_number_done=1
+//这个页面还差一点监听逻辑
 Page({
 
   /**
@@ -11,10 +15,10 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     canIUseGetUserProfile: false,
     canIUseOpenData: wx.canIUse('open-data.type.userAvatarUrl') && wx.canIUse('open-data.type.userNickName'), // 如需尝试获取用户信息可改为false
-    score: 0,
-    task_number: 0,
-    task_number_done: 0,
-    item:""
+    score: score,
+    task_number: task_number,
+    task_number_done: task_number_done,
+    item: ""
   },
 
   created() {
@@ -80,18 +84,76 @@ Page({
     }
   },
 
+
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad() {
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
+  onLoad: function (options) {
+    var that=this
+    //getAPP().setWatcher(this.data, this.watch); // 设置监听
+    //created()
+    wx.getStorage({
+      key: 'openid',
+      success: function (res) {
+        openid = res.data
+      }
+    })
+    wx.cloud.database().collection('userdata').where({
+      //先是查询用户名是否存在
+      openid: openid
+    }).get({
+      success(res) {
+        // console.log("找到了");
+        score = res.data[0].score
+        task_number = res.data[0].task_number
+        task_number_done = res.data[0].task_number_done
+        console.log("找到了", task_number)
+        that.setData({
+          score:res.data[0].score,
+          task_number:res.data[0].task_number,
+          task_number_done:res.data[0].task_number_done
+        })
+      }
+    })
+    // this.setData({
+    //   canIUseGetUserProfile: true,
+    //   score:score,
+    //   task_number:task_number,
+    //   task_number_done:task_number_done
+    //   // openid: options.openid
+    // })
+    // console.log("here",task_number)
   },
+  getUserInfo(e) {
+    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
+    console.log(e)
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true
+    })
+  },
+  // onLoad(options) {
+
+  //console.log(options.openid)
+  // if (wx.getUserProfile) {
+  //   this.setData({
+  //     canIUseGetUserProfile: true,
+  //     //openid: options.openid
+  //   })
+  // }
+  // wx.getStorage({
+  //   key: 'openid',
+  //   success: function (res) {
+  //     openid:res.data.openid
+  //     console.log("my",res);
+  //   }
+  // });
+  // },
+
   getUserProfile(e) {
+    //console.log("here")
     // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
+    //console.log("找到了", task_number)
     wx.getUserProfile({
       desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
       success: (res) => {
@@ -102,39 +164,52 @@ Page({
         })
       }
     })
-    wx.login({
-      success: (res) => {
-        console.log(res);
-        if (res.code) {
-          wx.request({
-            url: 'https://api.weixin.qq.com/sns/jscode2session?appid=wxeb51ad541e4728f7&secret=d5c87cfa094ab2ee03203d380eab205e&js_code=' + res.code + '&grant_type=authorization_code',
-            success: (res) => {
-              console.log(res);
-              openid = res.data.openid
-              //获取到你的openid
-              console.log(openid);
-            }
-          })
-          wx.cloud.database().collection('userdata').where({
-            //先是查询用户名是否存在
-            openid: this.data.openid
-          }).get({
-            success(res) {
-              this.data.score = res.score
-              this.data.task_number = res.task_number
-              this.data.task_number_done = res.task_number_done
-            }
-          })
-        }
+    // console.log("找到了", task_number)
+  },
+  handleChange(){
+    let db = wx.cloud.database() //设置数据库
+    db.collection('userdata').where({
+      openid: openid
+    }).watch({
+      onChange: function (res) {
+        console.log(res)
+        score = res.data[0].score
+        task_number = res.data[0].task_number
+        task_number_done = res.data[0].task_number_done
+      }
+    })
+    //let val = this.data.count
+    this.setData({ 
+      score: score,
+      task_number: task_number,
+      task_number_done: task_number_done
+     })
+  },
+  // 监听事件
+  setWatcher(data, watch){
+    Object.keys(watch).forEach(key => {
+      this.observe(data, key, watch[key])
+    })
+  },
+  observe(obj, key , watchFun){
+   let val = obj[key]
+     Object.defineProperty(obj, key, {
+       configurable: true,
+       enumerable: true,
+      set: function(value){
+           watchFun(value, val)
+           val = value
+      },
+      get: function(){
+        return val
       }
     })
   },
-  getUserInfo(e) {
-    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-    console.log(e)
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
+  // watch 属性，设置需要监听的属性
+  watch:{
+    count:function(newVal, oldVal){
+        console.log('newVal:',newVal);
+        console.log('oldVal:',oldVal);
+    },
   }
 })

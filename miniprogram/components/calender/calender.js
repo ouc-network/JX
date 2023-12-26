@@ -1,363 +1,254 @@
 // components/calender/calender.js
-// component/calendar/calendar.js
 Component({
   /**
    * 组件的属性列表
    */
+ 
   properties: {
-      spotMap: { //标点的日期
-          type: Object,
-          value: {}
-      },
-      defaultTime: { //标记的日期，默认为今日
-          type: String,
-          value: ''
-      },
-      title: { //标题
-          type: String,
-          value: ''
-      },
-      goNow: { // 是否有快速回到今天的功能
-          type: Boolean,
-          value: true,
-      }
+    currentPunchCardDate: {
+      type: Array,
+      value: []
+    },
+    currentYear: { // 当前页面显示的年
+      type: Number,
+      value: new Date().getFullYear()
+    },
+    currentMonth: { // 当前页面显示的年月
+      type: Number,
+      value: new Date().getMonth() + 1
+    },
+    nowYear: { // 当前年
+      type: Number,
+      value: new Date().getFullYear()
+    },
+    nowMonth: { // 当前月
+      type: Number,
+      value: new Date().getMonth() + 1
+    },
+    nowDate: { // 当前日
+      type: Number,
+      value: new Date().getDate()
+    },
+ 
   },
-
+ 
   /**
    * 组件的初始数据
    */
   data: {
-      selectDay: {}, //选中时间
-      nowDay: {}, //现在时间
-      open: false,
-      swiperCurrent: 1, //选中时间
-      oldCurrent: 1, //之前选中时间
-      dateList0: [], //0位置的日历数组
-      dateList1: [], //1位置的日历数组
-      dateList2: [], //2位置的日历数组
-      swiperDuration: 500,
-      swiperHeight: 0,
-      backChange: false, //跳过change切换
+    currentMonthDateLen: 0, // 当月天数
+    preMonthDateLen: 0, // 当月中，上月多余天数
+    allArr: [], // 35个或42个日期数据=当前显示月所有日期数据+上月残余尾部日期+下月残余头部日期
+    nowDate: null,
+    selectedDate: null, //当前选择日期
+    selectedMonth: null, //当前选择月
+    selectedYear: null, //当前选择年
   },
-
+  // 用observers监听properties的属性值
+  observers: {
+    'currentPunchCardDate': function (val) {
+      console.log(val)
+    }
+  },
+  // 在组件实例刚刚被创建时执行
+  created() {},
+  // 在组件实例进入页面节点树时执行
+  ready() {
+    this.getAllArr()
+  },
   /**
    * 组件的方法列表
    */
   methods: {
-      swiperChange(e) { // 日历滑动时触发的方法
-          if (this.data.backChange) {
-              this.setData({
-                  backChange: false
-              })
-              return
-          }
-          //计算第三个索引
-          let rest = 3 - e.detail.current - this.data.oldCurrent
-          let dif = e.detail.current - this.data.oldCurrent
-          let date
-          if (dif === -2 || (dif > 0 && dif !== 2)) { //向右划的情况，日期增加
-              if (this.data.open) {
-                  date = new Date(this.data.selectDay.year, this.data.selectDay.month)
-                  this.setMonth(date.getFullYear(), date.getMonth() + 1, undefined)
-                  this.getIndexList({
-                      setYear: this.data.selectDay.year,
-                      setMonth: this.data.selectDay.month,
-                      dateIndex: rest
-                  })
-              } else {
-                  date = new Date(this.data.selectDay.year, this.data.selectDay.month - 1, this.data.selectDay.day + 7)
-                  this.setMonth(date.getFullYear(), date.getMonth() + 1, date.getDate())
-                  this.getIndexList({
-                      setYear: this.data.selectDay.year,
-                      setMonth: this.data.selectDay.month - 1,
-                      setDay: this.data.selectDay.day + 7,
-                      dateIndex: rest
-                  })
-              }
-          } else { //向左划的情况，日期减少
-              if (this.data.open) {
-                  date = new Date(this.data.selectDay.year, this.data.selectDay.month - 2)
-                  this.setMonth(date.getFullYear(), date.getMonth() + 1, undefined)
-                  this.getIndexList({
-                      setYear: this.data.selectDay.year,
-                      setMonth: this.data.selectDay.month - 2,
-                      dateIndex: rest
-                  })
-              } else {
-                  date = new Date(this.data.selectDay.year, this.data.selectDay.month - 1, this.data.selectDay.day - 7)
-                  this.setMonth(date.getFullYear(), date.getMonth() + 1, date.getDate())
-                  this.getIndexList({
-                      setYear: this.data.selectDay.year,
-                      setMonth: this.data.selectDay.month - 1,
-                      setDay: this.data.selectDay.day - 7,
-                      dateIndex: rest
-                  })
-              }
-          }
-          this.setData({
-              oldCurrent: e.detail.current
-          })
-          this.setSwiperHeight(e.detail.current)
-      },
-      setSwiperHeight(index) { // 根据指定位置数组的大小计算长度
-          this.setData({
-              swiperHeight: this.data[`dateList${index}`].length / 7 * 82 + 18
-          })
-      },
-      //更新指定的索引和月份的列表
-      getIndexList({
-          setYear,
-          setMonth,
-          setDay = void 0,
-          dateIndex
-      }) {
-          let appointMonth
-          if (setDay)
-              appointMonth = new Date(setYear, setMonth, setDay)
-          else
-              appointMonth = new Date(setYear, setMonth)
-          let listName = `dateList${dateIndex}`
-          this.setData({
-              [listName]: this.dateInit({
-                  setYear: appointMonth.getFullYear(),
-                  setMonth: appointMonth.getMonth() + 1,
-                  setDay: appointMonth.getDate(),
-                  hasBack: true
-              }),
-          })
-      },
-      //设置月份
-      setMonth(setYear, setMonth, setDay) {
-          const day = Math.min(new Date(setYear, setMonth, 0).getDate(), this.data.selectDay.day)
-          if (this.data.selectDay.year !== setYear || this.data.selectDay.month !== setMonth) {
-              const data = {
-                  selectDay: {
-                      year: setYear,
-                      month: setMonth,
-                      day: setDay ? setDay : day
-                  },
-              }
-              if (!setDay) {
-                  data.open = true
-              }
-              this.setData(data, () => {
-                  this.triggerEvent("selectDay", this.data.selectDay)
-              })
-          } else {
-              const data = {
-                  selectDay: {
-                      year: setYear,
-                      month: setMonth,
-                      day: setDay ? setDay : day
-                  },
-              }
-              this.setData(data, () => {
-                  this.triggerEvent("selectDay", this.data.selectDay)
-              })
-          }
-      },
-      //展开收起
-      openChange() {
-          this.setData({
-              open: !this.data.open
-          })
-          this.triggerEvent("aaa", {
-              a: 0
-          })
-          // 更新数据
-          const selectDate = new Date(this.data.selectDay.year, this.data.selectDay.month - 1, this.data.selectDay.day)
-          if (this.data.oldCurrent === 0) {
-              this.updateList(selectDate, -1, 2)
-              this.updateList(selectDate, 0, 0)
-              this.updateList(selectDate, 1, 1)
-          } else if (this.data.oldCurrent === 1) {
-              this.updateList(selectDate, -1, 0)
-              this.updateList(selectDate, 0, 1)
-              this.updateList(selectDate, 1, 2)
-          } else if (this.data.oldCurrent === 2) {
-              this.updateList(selectDate, -1, 1)
-              this.updateList(selectDate, 0, 2)
-              this.updateList(selectDate, 1, 0)
-          }
-          this.setSwiperHeight(this.data.oldCurrent)
-      },
-      // 选中并切换今日日期
-      switchNowDate() {
-          const now = new Date()
-          const selectDate = new Date(this.data.selectDay.year, this.data.selectDay.month - 1, this.data.selectDay.day)
-          let dateDiff = (selectDate.getFullYear() - now.getFullYear()) * 12 + (selectDate.getMonth() - now.getMonth())
-          let diff = dateDiff === 0 ? 0 : dateDiff > 0 ? -1 : 1
-          const diffSum = (x) => (3 + (x % 3)) % 3
-          if (this.data.oldCurrent === 0) {
-              this.updateList(now, -1, diffSum(2 + diff))
-              this.updateList(now, 0, diffSum(0 + diff))
-              this.updateList(now, 1, diffSum(1 + diff))
-          } else if (this.data.oldCurrent === 1) {
-              this.updateList(now, -1, diffSum(0 + diff))
-              this.updateList(now, 0, diffSum(1 + diff))
-              this.updateList(now, 1, diffSum(2 + diff))
-          } else if (this.data.oldCurrent === 2) {
-              this.updateList(now, -1, diffSum(1 + diff))
-              this.updateList(now, 0, diffSum(2 + diff))
-              this.updateList(now, 1, diffSum(0 + diff))
-          }
-          this.setData({
-              swiperCurrent: diffSum(this.data.oldCurrent + diff),
-              oldCurrent: diffSum(this.data.oldCurrent + diff),
-              backChange: dateDiff !== 0,
-          })
-          this.setData({
-              selectDay: {
-                  year: now.getFullYear(),
-                  month: now.getMonth() + 1,
-                  day: now.getDate()
-              }
-          }, () => {
-              this.triggerEvent("selectDay", this.data.selectDay)
-          })
-          this.setSwiperHeight(this.data.oldCurrent)
-      },
-      //日历主体的渲染方法
-      dateInit({
-          setYear,
-          setMonth,
-          setDay = this.data.selectDay.day,
-          hasBack = false
-      } = {
-          setYear: this.data.selectDay.year,
-          setMonth: this.data.selectDay.month,
-          setDay: this.data.selectDay.day,
-          hasBack: false
-      }) {
-          let dateList = []; //需要遍历的日历数组数据
-          let now = new Date(setYear, setMonth - 1) //当前月份的1号
-          let startWeek = now.getDay(); //目标月1号对应的星期
-          let resetStartWeek = startWeek == 0 ? 6 : startWeek - 1; //重新定义星期将星期天替换为6其余-1
-          let dayNum = new Date(setYear, setMonth, 0).getDate() //当前月有多少天
-          let forNum = Math.ceil((resetStartWeek + dayNum) / 7) * 7 //当前月跨越的周数
-          let selectDay = setDay ? setDay : this.data.selectDay.day
-          this.triggerEvent("getDateList", {
-              setYear: now.getFullYear(),
-              setMonth: now.getMonth() + 1
-          })
-          if (this.data.open) {
-              //展开状态，需要渲染完整的月份
-              for (let i = 0; i < forNum; i++) {
-                  const now2 = new Date(now)
-                  now2.setDate(i - resetStartWeek + 1)
-                  let obj = {};
-                  obj = {
-                      day: now2.getDate(),
-                      month: now2.getMonth() + 1,
-                      year: now2.getFullYear()
-                  };
-                  dateList[i] = obj;
-              }
-          } else {
-              //非展开状态，只需要渲染当前周
-              for (let i = 0; i < 7; i++) {
-                  const now2 = new Date(now)
-                  //当前周的7天
-                  now2.setDate(Math.ceil((selectDay + (startWeek - 1)) / 7) * 7 - 6 - (startWeek - 1) + i)
-                  let obj = {};
-                  obj = {
-                      day: now2.getDate(),
-                      month: now2.getMonth() + 1,
-                      year: now2.getFullYear()
-                  };
-                  dateList[i] = obj;
-              }
-          }
-          if (hasBack) {
-              return dateList
-          }
-          this.setData({
-              dateList1: dateList
-          })
-      },
-      //一天被点击时
-      selectChange(e) {
-          const year = e.currentTarget.dataset.year
-          const month = e.currentTarget.dataset.month
-          const day = e.currentTarget.dataset.day
-          const selectDay = {
-              year: year,
-              month: month,
-              day: day,
-          }
-          if (this.data.open && (this.data.selectDay.year !== year || this.data.selectDay.month !== month)) {
-              if ((year * 12 + month) > (this.data.selectDay.year * 12 + this.data.selectDay.month)) { // 下个月
-                  if (this.data.oldCurrent == 2)
-                      this.setData({
-                          swiperCurrent: 0
-                      })
-                  else
-                      this.setData({
-                          swiperCurrent: this.data.oldCurrent + 1
-                      })
-              } else { // 点击上个月
-                  if (this.data.oldCurrent == 0)
-                      this.setData({
-                          swiperCurrent: 2
-                      })
-                  else
-                      this.setData({
-                          swiperCurrent: this.data.oldCurrent - 1
-                      })
-              }
-              this.setData({
-                  ['selectDay.day']: day
-              }, () => {
-                  this.triggerEvent("selectDay", this.data.selectDay)
-              })
-          } else if (this.data.selectDay.day !== day) {
-              this.setData({
-                  selectDay: selectDay
-              }, () => {
-                  this.triggerEvent("selectDay", this.data.selectDay)
-              })
-          }
-      },
-      updateList(date, offset, index) {
-          if (this.data.open) { //打开状态
-              const setDate = new Date(date.getFullYear(), date.getMonth() + offset * 1) //取得当前日期的上个月日期
-              this.getIndexList({
-                  setYear: setDate.getFullYear(),
-                  setMonth: setDate.getMonth(),
-                  dateIndex: index
-              })
-          } else {
-              const setDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset * 7) //取得当前日期的七天后的日期
-              this.getIndexList({
-                  setYear: setDate.getFullYear(),
-                  setMonth: setDate.getMonth(),
-                  setDay: setDate.getDate(),
-                  dateIndex: index
-              })
-          }
-      },
-  },
-  lifetimes: {
-      attached() {
-          let now = this.data.defaultTime ? new Date(this.data.defaultTime) : new Date()
-          let selectDay = {
-              year: now.getFullYear(),
-              month: now.getMonth() + 1,
-              day: now.getDate()
-          }
-          this.setData({
-              nowDay: {
-                  year: now.getFullYear(),
-                  month: now.getMonth() + 1,
-                  day: now.getDate()
-              }
-          })
-          this.setMonth(selectDay.year, selectDay.month, selectDay.day)
-          this.updateList(now, -1, 0)
-          this.updateList(now, 0, 1)
-          this.updateList(now, 1, 2)
-          this.setSwiperHeight(1)
+    // 获取某年某月天数：下个月1日-本月1日 
+    getDateLen(year, month) {
+      let actualMonth = month - 1;
+      let timeDistance = new Date(year, month) - new Date(year, actualMonth);
+      return timeDistance / (1000 * 60 * 60 * 24);
+    },
+    // 获取某月1号是周几
+    getFirstDateWeek(year, month) {
+      // 0-6，0代表周天
+      return new Date(year, month - 1, 1).getDay()
+    },
+    // 上月
+    preMonth(year, month) {
+      if (month == 1) {
+        return {
+          year: --year,
+          month: 12
+        }
+      } else {
+        return {
+          year: year,
+          month: --month
+        }
       }
-  },
-  observers: {}
+    },
+    // 下月
+    nextMonth(year, month) {
+      if (month == 12) {
+        return {
+          year: ++year,
+          month: 1
+        }
+      } else {
+        return {
+          year: year,
+          month: ++month
+        }
+      }
+    },
+    // 获取当月数据，返回数组
+    getCurrentArr() {
+      let currentMonthDateLen = this.getDateLen(this.data.currentYear, this.data.currentMonth) // 获取当月天数
+      let currentMonthDateArr = [] // 定义空数组
+      if (currentMonthDateLen > 0) {
+        for (let i = 1; i <= currentMonthDateLen; i++) {
+          currentMonthDateArr.push({
+            month: 'current', // 只是为了增加标识，区分上下月
+            date: i
+          })
+        }
+      }
+      this.setData({
+        currentMonthDateLen
+      })
+      return currentMonthDateArr
+    },
+    // 获取当月中，上月多余的日期数据，返回数组
+    getPreArr() {
+      let preMonthDateLen = this.getFirstDateWeek(this.data.currentYear, this.data.currentMonth) // 当月1号是周几 == 上月残余天数）
+      console.log("preMonthDateLen=", preMonthDateLen);
+      let preMonthDateArr = [] // 定义空数组
+      if (preMonthDateLen > 0) {
+        let {
+          year,
+          month
+        } = this.preMonth(this.data.currentYear, this.data.currentMonth) // 获取上月 年、月
+        let date = this.getDateLen(year, month) // 获取上月天数
+        for (let i = 0; i < preMonthDateLen; i++) {
+          preMonthDateArr.unshift({ // 尾部追加
+            month: 'pre', // 只是为了增加标识，区分当、下月
+            date: date
+          })
+          date--
+        }
+      }
+      this.setData({
+        preMonthDateLen
+      })
+      return preMonthDateArr
+    },
+    // 获取当月中，下月多余的日期数据，返回数组
+    getNextArr() {
+      let nextMonthDateLen = 35 - this.data.preMonthDateLen - this.data.currentMonthDateLen // 下月多余天数
+      console.log(" nextMonthDateLen=", nextMonthDateLen);
+      let nextMonthDateArr = [] // 定义空数组
+      if (nextMonthDateLen > 0) {
+        for (let i = 1; i <= nextMonthDateLen; i++) {
+          nextMonthDateArr.push({
+            month: 'next', // 只是为了增加标识，区分当、上月
+            date: i
+          })
+        }
+      } else if (nextMonthDateLen < 0) {
+        for (let i = 1; i <= (7 + nextMonthDateLen); i++) {
+          nextMonthDateArr.push({
+            month: 'next', // 只是为了增加标识，区分当、上月
+            date: i
+          })
+        }
+ 
+      }
+      return nextMonthDateArr
+    },
+    // 整合当月所有日期数据=上月残余+本月+下月多余
+    getAllArr() {
+      let preArr = this.getPreArr()
+      let currentArr = this.getCurrentArr()
+      let nextArr = this.getNextArr()
+      let allArr = [...preArr, ...currentArr, ...nextArr]
+      this.setData({
+        allArr
+      })
+      let sendObj = {
+        currentYear: this.data.currentYear,
+        currentMonth: this.data.currentMonth,
+        currentDate: this.data.selectedDate,
+        allArr: this.data.allArr,
+      }
+      // 向父组件发送数据
+      this.triggerEvent('sendObj', sendObj)
+ 
+    },
+    // 点击 上月
+    gotoPreMonth() {
+      let {
+        year,
+        month
+      } = this.preMonth(this.data.currentYear, this.data.currentMonth)
+      this.setData({
+        currentYear: year,
+        currentMonth: month,
+      })
+      this.getAllArr()
+    },
+    // 点击 下月
+    gotoNextMonth() {
+      let {
+        year,
+        month
+      } = this.nextMonth(this.data.currentYear, this.data.currentMonth)
+      this.setData({
+        currentYear: year,
+        currentMonth: month,
+      })
+      this.getAllArr()
+    },
+    // 点击日期
+    clickDate(e) {
+      var date = e.currentTarget.dataset.day;
+      var current = e.currentTarget.dataset.current;
+      if (current == 0) {
+        if (date > 6) {
+          // 点击上月日期--去上个月
+          var {
+            year,
+            month
+          } = this.preMonth(this.data.currentYear, this.data.currentMonth)
+          this.gotoPreMonth()
+        } else {
+          // 点击下月
+          var {
+            year,
+            month
+          } = this.nextMonth(this.data.currentYear, this.data.currentMonth)
+          this.gotoNextMonth()
+        }
+      } else {
+        var year = this.data.currentYear;
+        var month = this.data.currentMonth;
+      }
+      this.setData({
+        selectedYear: year,
+        selectedMonth: month,
+        selectedDate: date,
+      })
+      console.log("当前选择日期", year, "-", month, "-", date);
+      console.log(this.data.selectedDate);
+      wx.nextTick(() => {
+        this.getAllArr()
+      })
+ 
+    },
+    // 回今天
+    gotoToday() {
+      this.setData({
+        currentYear: this.data.nowYear,
+        currentMonth: this.data.nowMonth,
+      })
+      this.getAllArr()
+    }
+  }
 })

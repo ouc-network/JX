@@ -11,7 +11,7 @@
       </block>
       <block wx:elif="{{!hasUserInfo}}">
         <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+        <button wx:if="{{canIUseGetUserProfile}}" bindtap="handleChange"> 获取头像昵称 </button>
         <view wx:else> 请使用1.4.4及以上版本基础库 </view>
       </block>
       <block wx:else>
@@ -47,7 +47,7 @@
       </view>
       <!-- 这个字体放在partTwoR是可以显示的，这里无法显示应该是css的问题 -->
       
-      <view><text class="task_num">{{task_number_done}}/{{task_number_done}}</text></view>
+      <view><text class="task_num">{{task_number}}/{{task_number_done}}</text></view>
     </view>
   </view>
   <!--活力图-->
