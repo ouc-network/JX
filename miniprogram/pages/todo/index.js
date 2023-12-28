@@ -2,8 +2,16 @@
 import Todo from '../../models/Todo'
 import todoStore from '../../store/todoStore'
 
+var currentYear= null
+var currentMonth= null
+var currentDate=null
+var nowYear= new Date().getFullYear()
+var nowMonth= new Date().getMonth()
+var nowDate= new Date().getDate()
+
 //获取应用实例
 const app = getApp()
+const db = wx.cloud.database()
 
 Page({
   data: {
@@ -18,6 +26,47 @@ Page({
     delay: true
   },
 
+  onLoad(){
+    var that=this
+    if(currentDate!=nowDate || currentMonth!=nowMonth || currentYear!=nowYear)
+    {
+      currentYear=nowYear
+      currentMonth=nowMonth
+      currentDate=nowDate
+      that.setData({
+        todos:[],
+        uncompletedCount:0,
+        completedCount:0
+      })
+      //修改对应数据库中的值
+      db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
+        data:{
+          task_number_done:that.data.completedCount,
+          task_number:that.data.uncompletedCount,
+          todos:this.data.todos
+        },
+        success(res)
+        {
+          console.log("todos",res)
+        }
+      })
+      // console.log("todos")
+      // console.log("todos2",todos)
+    }
+    else{
+      //没有到新一天，从数据库中获取值
+      db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").get({
+        success(res){
+          that.setData({
+            uncompletedCount:res.data.task_number,
+            completedCount:res.data.task_number_done,
+            todos:res.data.todos
+          })
+          console.log(res)
+        }
+      })
+    }
+  },
   /**
    * 生命周期函数--监听页面显示
    */
@@ -95,6 +144,18 @@ Page({
     data.completedCount = todoStore.getCompletedTodos().length
     data.uncompletedCount = todoStore.getUncompletedTodos().length
     this.setData(data)
+    var that=this
+    db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
+      data:{
+        task_number_done:that.data.completedCount,
+        task_number:that.data.uncompletedCount,
+        todos:this.data.todos
+      },
+      success(res)
+      {
+        console.log("todosupdate",res)
+      }
+    })
   },
 
   /**

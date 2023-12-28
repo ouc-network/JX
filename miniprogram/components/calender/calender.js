@@ -47,7 +47,7 @@ Component({
   // 用observers监听properties的属性值
   observers: {
     'currentPunchCardDate': function (val) {
-      console.log(val)
+      // console.log(val)
     }
   },
   // 在组件实例刚刚被创建时执行

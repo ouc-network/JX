@@ -1,8 +1,15 @@
 // pages/my/my.js
+var wxCharts = require("../../utils/wxcharts.js");
+var yuelineChart = null;
 var openid
 var score = 0
-var task_number=1
-var task_number_done=1
+var task_number = 1
+var task_number_done = 1
+var dateTimeArr
+var sum = []
+
+const app = getApp()
+
 //这个页面还差一点监听逻辑
 Page({
 
@@ -10,6 +17,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    imageWidth: 0,
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
@@ -21,75 +29,12 @@ Page({
     item: ""
   },
 
-  created() {
-    let d = new Date();
-    let day = d.getDay(); //获取今天所在星期，以进行后续计算
-    let today = d.getDate(); //获取今天的日数
-
-    this.current.year = d.getFullYear(); //初始化今日的年月日
-    this.current.month = d.getMonth();
-    this.current.date = d.getDate();
-
-    let info = {}; //用来存放某一天的数据对象（年月日、isToday、level）      
-    let month = ""; //后续计算某月第一天在哪一列用，表示第几月
-    let weekOfMonth = "" //后续计算某月第一天在哪一列用，表示第几列
-
-    /**
-     *前提：Date对象通过setDate()设置到某一天的年月日，例如setDate(1)就是设置日期月本月1号
-     *而setDate(0)则是上个月最后一天，setDate(-1)则是设置为上个月倒数第二天
-     *以此类推，假如今天是星期五，如果周日算本周第一天，则今天是本周第6天，也就是本周在今日前面还有5天，本周在第12列，则今天前的日期有11*7+5=82天，所以第1列第1格为82天前。
-     *假如今天是13日，82-13=69，那么第1列第1格为本月第1天的前69天，则那天的日期设置为setDate(-69+1)（+1是为了算上0），最后就能获得那一天的年月日对象，再获得年月日数值。
-     *知道前提后下面的代码可以自己体会了
-     */
-    for (let i = 0; i < 84; i++) {
-      d.setFullYear(this.current.year); //每次循环要重置年月日为今天否则会以上次循环结尾的年月日计算而计算错误
-      d.setMonth(this.current.month);
-      d.setDate(this.current.date);
-
-      d.setDate(today - 77 - day + i); //设置到本次循环的date   
-      //(today-(84-(7-day)+i)
-
-      let level = Math.floor(Math.random() * 3); //这里是随机设置每天的频率等级，后续开发要替换为自己计算的真实等级（不同等级对应不同颜色方格）
-
-      if ( //判断是否为今天，是则做些标记，后续渲染时可以突出强调今天的格子
-        d.getMonth() == this.current.month &&
-        d.getDate() == this.current.date
-      ) {
-        info = { //每个格子（天）的info对象
-          year: d.getFullYear(), //年月日
-          month: d.getMonth() + 1,
-          date: d.getDate(),
-          number: 10, //今日的数据量
-          level: level, //今日数据量对应的等级
-          isToday: true, //是否是今天
-        };
-        this.infos.push(info);
-      } else {
-        info = {
-          year: d.getFullYear(),
-          month: d.getMonth() + 1,
-          date: d.getDate(),
-          number: 10,
-          level: level,
-          isToday: false,
-        };
-        this.infos.push(info);
-      }
-      //判断每月第一天在12列种的哪一列
-      if (d.getDate() == 1) { //date为1的肯定是某月第一天
-        month = d.getMonth() + 1 //获取这一天对应的月份（0-11，所以还要+1）
-        weekOfMonth = parseInt((i + 1) / 7) //这个月的第一天的index（84天的第几天）除以7获得所在列的index（12列的第几列），作为下面monthBar的index，并把原来空的内容用替换为xx月
-        this.monthBar[weekOfMonth] = month + "月"
-      }
-    }
-  },
-
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that=this
+    var that = this
     //getAPP().setWatcher(this.data, this.watch); // 设置监听
     //created()
     wx.getStorage({
@@ -109,9 +54,9 @@ Page({
         task_number_done = res.data[0].task_number_done
         console.log("找到了", task_number)
         that.setData({
-          score:res.data[0].score,
-          task_number:res.data[0].task_number,
-          task_number_done:res.data[0].task_number_done
+          score: res.data[0].score,
+          task_number: res.data[0].task_number,
+          task_number_done: res.data[0].task_number_done
         })
       }
     })
@@ -124,6 +69,78 @@ Page({
     // })
     // console.log("here",task_number)
   },
+  onShow() {
+    var that = this
+    //getAPP().setWatcher(this.data, this.watch); // 设置监听
+    //created()
+    wx.cloud.database().collection('userdata').doc('09e78768658a586304d4a19d73b3c162').get({
+      success(res) {
+        // console.log("找到了");
+        score = res.data.score
+        task_number = res.data.task_number
+        task_number_done = res.data.task_number_done
+        console.log("找到了", task_number)
+        that.setData({
+          score: res.data.score,
+          task_number: res.data.task_number,
+          task_number_done: res.data.task_number_done,
+        })
+        dateTimeArr = res.data.dateTime
+        // console.log("sum",res.data.dateTime,dateTimeArr)
+        var dateArr = []
+        for (var i = 1; i <= 12; i++) {
+        dateTimeArr.forEach((item) => {
+          // console.log("here",item)
+          dateArr = []
+            if (item.getFullYear() == new Date().getFullYear() && item.getMonth() + 1 == i) {
+              dateArr.push(item.getDate())
+            }
+          })
+          sum.push(dateArr.length)
+        }
+        console.log("sum",sum)
+      }
+    })
+    // try {
+    //   var res = wx.getSystemInfoSync();
+    //   windowWidth = res.windowWidth;
+    // } catch (e) {
+    //   console.error('getSystemInfoSync failed!');
+    // }
+    yuelineChart = new wxCharts({ //当月用电折线图配置
+      canvasId: 'yueEle',
+      type: 'line',
+      categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], //categories X轴
+      animation: true,
+      series: [{
+        name: 'A',
+        //替换成月数据
+        data: sum,
+        format: function (val, name) {
+          return val + '';
+        }
+      }],
+      xAxis: {
+        disableGrid: true
+      },
+      yAxis: {
+        title: '每月打卡次数',
+        format: function (val) {
+          return val;
+        },
+        max: 15,
+        min: -5
+      },
+      width: 300,
+      height: 290,
+      dataLabel: false,
+      dataPointShape: true,
+      // extra: {
+      //   lineStyle: 'curve'
+      // }
+    });
+  },
+
   getUserInfo(e) {
     // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
     console.log(e)
@@ -166,8 +183,9 @@ Page({
     })
     // console.log("找到了", task_number)
   },
-  handleChange(){
+  handleChange() {
     let db = wx.cloud.database() //设置数据库
+    var that = this
     db.collection('userdata').where({
       openid: openid
     }).watch({
@@ -179,37 +197,37 @@ Page({
       }
     })
     //let val = this.data.count
-    this.setData({ 
+    thst.setData({
       score: score,
       task_number: task_number,
       task_number_done: task_number_done
-     })
+    })
   },
   // 监听事件
-  setWatcher(data, watch){
+  setWatcher(data, watch) {
     Object.keys(watch).forEach(key => {
       this.observe(data, key, watch[key])
     })
   },
-  observe(obj, key , watchFun){
-   let val = obj[key]
-     Object.defineProperty(obj, key, {
-       configurable: true,
-       enumerable: true,
-      set: function(value){
-           watchFun(value, val)
-           val = value
+  observe(obj, key, watchFun) {
+    let val = obj[key]
+    Object.defineProperty(obj, key, {
+      configurable: true,
+      enumerable: true,
+      set: function (value) {
+        watchFun(value, val)
+        val = value
       },
-      get: function(){
+      get: function () {
         return val
       }
     })
   },
   // watch 属性，设置需要监听的属性
-  watch:{
-    count:function(newVal, oldVal){
-        console.log('newVal:',newVal);
-        console.log('oldVal:',oldVal);
+  watch: {
+    count: function (newVal, oldVal) {
+      console.log('newVal:', newVal);
+      console.log('oldVal:', oldVal);
     },
   }
 })

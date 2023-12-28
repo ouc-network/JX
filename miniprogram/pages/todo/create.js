@@ -2,6 +2,8 @@
 import Todo from '../../models/Todo'
 import todoStore from '../../store/todoStore'
 
+var task_number=0
+
 Page({
 
   /**
@@ -17,7 +19,7 @@ Page({
 
     //分数
     scores: ['5','10','15','20','25','50'],
-    score:""
+    score:"",
   },
 
   //点击控制下拉框的展示、隐藏
