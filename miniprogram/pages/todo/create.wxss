@@ -1,0 +1,105 @@
+/* pages/todos/create.wxss */
+.create-header {
+  padding: 0;
+  border-bottom: 0;
+}
+.page .field-set{
+
+  background-size: cover;
+  height: 1150rpx;
+}
+
+.field-item {
+  display: flex;
+  height: 100rpx;
+  flex-direction: row;
+}
+.field-item .label1{
+  width:1000rpx;
+  display: flex;
+  margin-top: 30rpx;
+  flex-direction: row;
+  height: 60rpx;
+
+}
+.field-item .label1 .pre{
+  display: flex;
+  width: 150rpx;
+}
+.field-item .label1 .pre .field-label{
+  margin-top: 10rpx;
+  margin-left: 40rpx;
+}
+
+.field-item .next{
+  width: 220rpx;
+}
+.field-item .next .field-control picker{
+  margin-left: 40rpx;
+  margin-top: 10rpx;
+  width: 80%;
+  color:black;
+  justify-content: center;
+}
+.field-item .label1 .field-control{
+  justify-content: center;
+  width: 80rpx;
+}
+.field-item .score{
+  flex-direction: row;
+  margin-top: 30rpx;
+  height: 60rpx;
+  width:1000rpx;
+  margin-left: 20rpx;
+  display: flex;
+}
+.field-item .score .pre{
+  margin-top: 10rpx;
+  margin-left: 10%;
+  width: 100rpx;
+}
+.field-item .score .pre .field-label{
+  margin-top: 10rpx;
+
+}
+.field-item .score .next{
+  width: 100rpx;
+}
+
+.field-item .line{
+  width:30%;
+  margin-left: 20%;
+  height:2rpx;
+  background:#aaa;
+}
+.field-item2{
+  display: flex;
+  flex-direction: column;
+  margin-top: 10rpx;
+  margin-left: 5%;
+}
+.field-item2 .field-control{
+  border: 3rpx soli gainsboro;
+  background-color: white;
+  margin-top: 30rpx;
+  width: 650rpx;
+  border-radius: 10rpx;
+}
+.fixed-bottom{
+  align-items: flex-end;
+  display:flex;
+  flex-direction: row;
+}
+.fixed-bottom .button-group{
+  display:flex;
+  width: 100%;
+  flex-direction: row;
+}
+.fixed-bottom .button-group .button{
+  width: 50%;
+  
+}
+.fixed-bottom .button-group .button2{
+  width: 50%;
+  background-color:#b8b8b8;
+}

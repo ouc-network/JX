@@ -43,10 +43,7 @@
       <view class="itemname">
         <image class="icon" src="../../ico/完成任务.ico"></image>
         <view><text class="title">task</text></view>
-        
-      </view>
-      <!-- 这个字体放在partTwoR是可以显示的，这里无法显示应该是css的问题 -->
-      
+      </view>      
       <view><text class="task_num">{{task_number}}/{{task_number_done}}</text></view>
     </view>
   </view>

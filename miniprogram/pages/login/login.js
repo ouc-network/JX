@@ -95,7 +95,7 @@ Page({
               console.log("获取数据成功", res)
               console.log('')
               wx.switchTab({
-                url: '/pages/index/index',
+                url: '/pages/todo/index',
               })
               // wx.navigateTo({
               //     url: '/pages/index/index',
@@ -145,7 +145,7 @@ Page({
         }
         //wx.setStorageSync('openid', openid);
         wx.switchTab({
-          url: '/pages/index/index'
+          url: '/pages/todo/index'
         })
         wx.showToast({
           title: '登陆成功',
