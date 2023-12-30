@@ -26,18 +26,12 @@
         </view>
       </view>
       <view class="score">
-        <view class="pre">
-          <label class="field-label">积分</label>
+        <view class="s_pre">
+          <label class="s_field-label">积分</label>
         </view>
-        <view class="next">
-          <label class="field-control">
-            <picker
-              class="w-full"
-              range="{{ scores }}"
-              value="{{ todo.score - 1 }}"
-              bindchange="handleScoreChange">
-              {{ scores[todo.score - 1] }}
-            </picker>
+        <view class="s_next">
+          <label class="s_field-control">
+            <input maxlength="3" bindinput="bindKeyInput" class="input" name="scores" placeholder="请输入积分" auto-focus="true" />
           </label>
         </view>
       </view>

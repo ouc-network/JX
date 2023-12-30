@@ -17,6 +17,7 @@
       auto-focus="{{ autoFocus }}">
     </input>
   </view>
+  <view class="out_score">{{inputValue}}</view>
   <view class="todo-item__col3" bindtap="handleDateClick">
     <!-- <text class="todo-item__date">{{ todo.date }}</text> -->
     <picker class="todo-item__date" mode="date" bindchange="handleDateChange">{{ todo.date }}</picker>

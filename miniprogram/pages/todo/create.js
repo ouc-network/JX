@@ -19,7 +19,7 @@ Page({
 
     //分数
     scores: ['5','10','15','20','25','50'],
-    score:"",
+    score:"0",
   },
 
   //点击控制下拉框的展示、隐藏
@@ -67,7 +67,10 @@ Page({
     this.update()
   },
 
-
+handleScoreChange(e){
+  this.data.todo.scores = parseInt(e.detail.value) + 1
+  this.update()
+},
 
   /**
    * 描述输入事件

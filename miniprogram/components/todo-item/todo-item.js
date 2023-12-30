@@ -15,6 +15,12 @@ Component({
     autoFocus: {
       type: Boolean,
       default: false
+    },
+
+    bindKeyInput: function (e) {
+      this.setData({
+        inputValue: e.detail.value
+      })
     }
   },
 

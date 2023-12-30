@@ -12,6 +12,7 @@
 .field-item {
   display: flex;
   height: 100rpx;
+  width: 100%;
   flex-direction: row;
 }
 .field-item .label1{
@@ -39,10 +40,12 @@
   margin-top: 10rpx;
   width: 80%;
   color:black;
+  background-color: antiquewhite;
   justify-content: center;
 }
 .field-item .label1 .field-control{
   justify-content: center;
+  
   width: 80rpx;
 }
 .field-item .score{
@@ -52,19 +55,27 @@
   width:1000rpx;
   margin-left: 20rpx;
   display: flex;
+  background-color: aquamarine;
 }
-.field-item .score .pre{
+.field-item .score .s_pre{
   margin-top: 10rpx;
   margin-left: 10%;
   width: 100rpx;
 }
-.field-item .score .pre .field-label{
+.field-item .score .s_pre .s_field-label{
   margin-top: 10rpx;
 
 }
-.field-item .score .next{
-  width: 100rpx;
+.field-item .score .s_next{
+  width: 150rpx;
 }
+
+.field-item .score .s_next .s_field-control input{
+  background-color: cornsilk;
+  margin-top: 10rpx;
+}
+
+
 
 .field-item .line{
   width:30%;
@@ -97,7 +108,6 @@
 }
 .fixed-bottom .button-group .button{
   width: 50%;
-  
 }
 .fixed-bottom .button-group .button2{
   width: 50%;
