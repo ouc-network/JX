@@ -21,7 +21,7 @@
         style="height:44px;width:44px;line-height:30px;{{nowYear==currentYear&&currentMonth==nowMonth&&item.date==nowDate&&item.date<index?'color:#fff;background:#33D4C5;border-radius:100px':''}};{{item.month == 'current'&&selectedYear==currentYear&&selectedMonth==currentMonth&&item.date==selectedDate?'color:#fff;background:orange;border-radius:100px':''}} ">
         {{item.date}}
         <view>
-          <icon wx:if="{{item.month == 'current'&&dataProcess.filterDate(currentPunchCardDate,item.date)}}" class="icon" color="#F44336" type="success_no_circle" size="15"></icon>
+          <icon wx:if="{{item.month == nowMonth &&dataProcess.filterDate(currentPunchCardDate,item.date)}}" class="icon" color="#F44336" type="success_no_circle" size="15"></icon>
         </view>
       </view>
     </view>

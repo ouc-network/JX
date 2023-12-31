@@ -32,7 +32,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
-    dateArr = []
+    // dateArr = []
     wx.getStorage({
       key: 'Calender',
       success: function (res) {
@@ -42,6 +42,10 @@ Page({
     })
     var nowYear = new Date().getFullYear()
     var nowMonth = new Date().getMonth()
+    var flag = dateArr[dateArr.length-1] == this.data.nowDate ? true : false
+    // this.setData({
+    //   disabledFlag:flag
+    // })
     wx.nextTick(() => {
       this.getHabitInfo(nowYear, nowMonth)
     })
@@ -79,7 +83,8 @@ Page({
           }
         })
         console.log(dateArr)
-        console.log(year, month, that.data.nowDate);
+        console.log(year, month + 1, that.data.nowDate)
+        
         // if (task_number == 0) {
         //   // 打卡按钮禁用的情况（1）页面初始化时，未点击任何日期（2）当前点击的日期在今天之后
         //   var flag = false
@@ -87,14 +92,24 @@ Page({
         //   // task_number_done = 0
         // } else {
         //   // 打卡按钮禁用的情况 （3）当前日期已打卡
-        //   // if (task_number != 0)
-        //   //   flag = true
-        //   // var flag = dateArr.indexOf(this.data.nowDate) == -1 ? false : true
+        // if (task_number = 0){
+        //     flag = true
+        // console.log(hereflag)
         // }
+        // console.log("here flag")
+        var length=dateArr.length-1
+        var flag = false
+        // console.log("flag",dateArr[length],that.data.nowDate)
+        if(dateArr[length] == that.data.nowDate)
+        {
+          console.log("ture")
+          flag=true
+        } 
+        console.log("here flag")
         that.setData({
           habitInfo: res.data,
           punchCardDateArr: dateArr,
-          // disabledFlag: flag,
+          disabledFlag: flag,
           totalDays: dateTimeArr.length,
           monthDays: dateArr.length
         })
@@ -104,7 +119,7 @@ Page({
   },
   // 点击打卡按钮-打卡
   punchCard() {
-    console.log(this.data.nowYear, this.data.nowMonth - 1, this.data.nowDate);
+    console.log(this.data.nowYear, this.data.nowMonth + 1, this.data.nowDate);
     var that = this
     var currentTime = new Date(this.data.nowYear, this.data.nowMonth, this.data.nowDate)
     //修改这里的逻辑使其能够更新打卡统计的数字，不行就不做了
@@ -116,7 +131,7 @@ Page({
       },
       success: function (res) {
         console.log("数据添加成功", res)
-        that.getHabitInfo(that.data.nowYear, that.data.nowtMonth-1)
+        that.getHabitInfo(that.data.nowYear, that.data.nowMonth)
         that.setData({
           disabledFlag: true
         })

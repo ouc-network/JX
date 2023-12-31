@@ -40,6 +40,7 @@ Component({
     preMonthDateLen: 0, // 当月中，上月多余天数
     allArr: [], // 35个或42个日期数据=当前显示月所有日期数据+上月残余尾部日期+下月残余头部日期
     nowDate: null,
+    nowMonth: new Date().getMonth() + 1,
     selectedDate: null, //当前选择日期
     selectedMonth: null, //当前选择月
     selectedYear: null, //当前选择年
@@ -106,7 +107,7 @@ Component({
       if (currentMonthDateLen > 0) {
         for (let i = 1; i <= currentMonthDateLen; i++) {
           currentMonthDateArr.push({
-            month: 'current', // 只是为了增加标识，区分上下月
+            month: this.data.currentMonth, // 只是为了增加标识，区分上下月
             date: i
           })
         }

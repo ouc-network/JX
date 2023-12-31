@@ -73,6 +73,7 @@ Page({
     var that = this
     //getAPP().setWatcher(this.data, this.watch); // 设置监听
     //created()
+    sum=[]
     wx.cloud.database().collection('userdata').doc('09e78768658a586304d4a19d73b3c162').get({
       success(res) {
         // console.log("找到了");

@@ -62,9 +62,14 @@ Page({
     this.data.todo.level = parseInt(e.detail.value) + 1
     this.update()
   },
+
   bindScoreInput(e){
-    this.data.todo
-    this.update
+    let score=e.detail.value
+    this.data.todo.score = e.detail.value
+    this.update()
+    // Object.assign(this.data.todo, todo)
+    // this.update()
+    // console.log(this.data.score)
   },
 
 
