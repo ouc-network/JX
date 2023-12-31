@@ -22,10 +22,10 @@
   height: 90rpx;
   margin-left: -45rpx;
   border-radius: 50%;
-  font-size: 60rpx;
+  font-size: 70rpx;
   line-height: 90rpx;
   text-align: center;
-  background-color: #fff;
+  background-color: #a7d3e8;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  color: #444;
+  color: #fff;
 }

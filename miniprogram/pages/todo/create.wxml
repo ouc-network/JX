@@ -31,7 +31,7 @@
         </view>
         <view class="s_next">
           <label class="s_field-control">
-            <input maxlength="3" bindinput="bindKeyInput" class="input" name="scores" placeholder="请输入积分" auto-focus="true" />
+            <input maxlength="3"  bindinput="bindScoreInput" class="input" name="scores" placeholder="请输入积分" auto-focus="true" />
           </label>
         </view>
       </view>

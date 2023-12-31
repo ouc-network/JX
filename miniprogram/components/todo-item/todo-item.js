@@ -17,11 +17,7 @@ Component({
       default: false
     },
 
-    bindKeyInput: function (e) {
-      this.setData({
-        inputValue: e.detail.value
-      })
-    }
+    
   },
 
   /**
@@ -54,6 +50,12 @@ Component({
     handleDateChange (e) {
       this.data.todo.date = e.detail.value.replace(/\-/g, '/')
       this.update()
+    },
+    
+    bindKeyInput: function (e) {
+      this.setData({
+        inputValue: e.detail.value
+      })
     },
 
     update(data) {

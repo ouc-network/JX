@@ -15,11 +15,6 @@ Page({
 
     // 级别
     levels: ['紧急且重要', '重要不紧急', '紧急不重要', '不紧急不重要'],
-    
-
-    //分数
-    scores: ['5','10','15','20','25','50'],
-    score:"0",
   },
 
   //点击控制下拉框的展示、隐藏
@@ -59,6 +54,7 @@ Page({
     this.update()
   },
 
+  
   /**
    * 级别改变事件
    */
@@ -66,11 +62,11 @@ Page({
     this.data.todo.level = parseInt(e.detail.value) + 1
     this.update()
   },
+  bindScoreInput(e){
+    this.data.todo
+    this.update
+  },
 
-handleScoreChange(e){
-  this.data.todo.scores = parseInt(e.detail.value) + 1
-  this.update()
-},
 
   /**
    * 描述输入事件

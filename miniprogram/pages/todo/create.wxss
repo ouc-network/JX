@@ -40,7 +40,6 @@
   margin-top: 10rpx;
   width: 80%;
   color:black;
-  background-color: antiquewhite;
   justify-content: center;
 }
 .field-item .label1 .field-control{
@@ -55,7 +54,6 @@
   width:1000rpx;
   margin-left: 20rpx;
   display: flex;
-  background-color: aquamarine;
 }
 .field-item .score .s_pre{
   margin-top: 10rpx;
@@ -71,7 +69,7 @@
 }
 
 .field-item .score .s_next .s_field-control input{
-  background-color: cornsilk;
+  
   margin-top: 10rpx;
 }
 
