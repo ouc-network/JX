@@ -211,6 +211,7 @@ Component({
     clickDate(e) {
       var date = e.currentTarget.dataset.day;
       var current = e.currentTarget.dataset.current;
+      console.log("clickDate",e)
       if (current == 0) {
         if (date > 6) {
           // 点击上月日期--去上个月
