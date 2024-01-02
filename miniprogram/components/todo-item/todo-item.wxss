@@ -5,15 +5,28 @@
   border-left: 50rpx solid red;
   font-size: 32rpx;
   padding: 22rpx 15rpx; 
+  
   /* border-bottom: 1rpx dashed #f0f3ff;  */
 }
+.container{
+  display: flex;
+  flex-direction:column;
+}
 .out_score{
-  color:darkgray;
-  margin-top: 5rpx;
-  margin-left: -140rpx;
-  border: 3rpx solid #437491;
+  color:#6fa9c4;
+  margin-left: 45rpx;
   border-radius: 50rpx;
+  width: 30rpx;
+  height: 20rpx;
+  font-size: 30rpx;
   border-bottom-left-radius: 10px;
+  padding: 15rpx;
+}
+.todo-item__date {
+  font-size: 20rpx;
+  color: #ccc;
+  display: inline-block;
+  height: 5rpx;
   padding: 15rpx;
 }
 .todo-item--level1 {
@@ -21,6 +34,7 @@
 }
 .todo-item--level2 {
   border-left-color: #FDC533;
+  
 }
 .todo-item--level3 {
   border-left-color: #5872DE;
@@ -48,6 +62,8 @@
   padding: 0 32rpx 0 20rpx;
   padding-bottom: 4px;
   vertical-align: middle;
+  width: 30rpx;
+  margin-top: 15rpx;
 }
 
 .todo-item__icon {
@@ -55,24 +71,18 @@
   border: 5rpx solid #5872DE;
   vertical-align: middle;
   padding: 3rpx;
+  
 }
 
 .todo-item__title {
   color: #2C323F;
-  
   display: inline-block;
   vertical-align: middle;
-  width: 98%;
+  width: 300rpx;
+  height: 80rpx;
 }
 
 .todo-item--completed .todo-item__title {
   color: #C1C5C8;
-  
 }
 
-.todo-item__date {
-  font-size: 28rpx;
-  color: #ccc;
-  display: inline-block;
-  text-align: center;
-}

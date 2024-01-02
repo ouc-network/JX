@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "新的一天！",
+  "navigationBarBackgroundColor": "#a7d3e8",
   "usingComponents": {
     "todo-item": "/components/todo-item/todo-item",
     "tips-info": "/components/tips-info/tips-info"

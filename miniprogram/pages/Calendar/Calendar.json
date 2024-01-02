@@ -1,5 +1,6 @@
 {
-  
+  "navigationBarTitleText": "日历",
+  "navigationBarBackgroundColor": "#a7d3e8",
   "usingComponents": {
     "calendar":"../../components/calender/calender"
   }

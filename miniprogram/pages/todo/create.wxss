@@ -3,17 +3,28 @@
   padding: 0;
   border-bottom: 0;
 }
+.pre_png{
+  margin-left: 36rpx;
+  width: 70rpx;
+  height: 70rpx;
+}
 .page .field-set{
-
+  
   background-size: cover;
   height: 1150rpx;
 }
-
+.score_icon{
+  margin-top: 10rpx;
+  margin-left: 10rpx;
+  width: 80rpx;
+  height: 80rpx;
+}
 .field-item {
+  background-color: cornsilk;
   display: flex;
-  height: 100rpx;
+  height: 135rpx;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
 }
 .field-item .label1{
   width:1000rpx;
@@ -21,56 +32,90 @@
   margin-top: 30rpx;
   flex-direction: row;
   height: 60rpx;
-
+  
+}
+.label1{
+  border-radius: 20rpx;
+  display: flex;
 }
 .field-item .label1 .pre{
   display: flex;
+  flex-direction: column;
+  height: 200rpx;
   width: 150rpx;
 }
 .field-item .label1 .pre .field-label{
-  margin-top: 10rpx;
   margin-left: 40rpx;
+  height: 25rpx;
+  color: #b8b8b8;
+  font-size: 20rpx;
 }
 
 .field-item .next{
   width: 220rpx;
 }
 .field-item .next .field-control picker{
-  margin-left: 40rpx;
+  margin-left: 360rpx;
   margin-top: 10rpx;
+  font-size: 25rpx;
   width: 80%;
-  color:black;
-  justify-content: center;
+  height: 40rpx;
+  background-color: rgb(185, 234, 250);
+  text-align:center;
+  border-color: rgb(139, 199, 199);
+  border-radius: 20rpx;
+  color: rgb(121, 121, 121);
 }
 .field-item .label1 .field-control{
   justify-content: center;
   
   width: 80rpx;
 }
+
 .field-item .score{
   flex-direction: row;
-  margin-top: 30rpx;
-  height: 60rpx;
-  width:1000rpx;
-  margin-left: 20rpx;
+  margin-top: 50rpx;
+  height: 130rpx;
+  width:100%;
   display: flex;
+  background-color: #fff;
 }
 .field-item .score .s_pre{
-  margin-top: 10rpx;
-  margin-left: 10%;
-  width: 100rpx;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20rpx;
+  width: 500rpx;
+  height: 180rpx;
 }
 .field-item .score .s_pre .s_field-label{
-  margin-top: 10rpx;
-
+  margin-left: 28rpx;
+  width: 50rpx;
+  height: 25rpx;
+  color: #b8b8b8;
+  font-size: 20rpx;
+}
+.line{
+  background-color: rgb(185, 234, 250) ;
+  height: 5rpx;
 }
 .field-item .score .s_next{
-  width: 150rpx;
+  width: 200rpx;
+  height: 100rpx;
+  display: flex;
+  margin-top: 20rpx;
 }
 
 .field-item .score .s_next .s_field-control input{
-  
-  margin-top: 10rpx;
+  display: flex;
+  width: 150rpx;
+  height: 50rpx;
+  margin-top: 20rpx;
+  font-size: 23rpx;
+  background-color: rgb(185, 234, 250);
+  text-align:center;
+  border-color: rgb(139, 199, 199);
+  border-radius: 20rpx;
+  margin-top: 20rpx;
 }
 
 
@@ -78,7 +123,7 @@
 .field-item .line{
   width:30%;
   margin-left: 20%;
-  height:2rpx;
+  height:1rpx;
   background:#aaa;
 }
 .field-item2{
@@ -110,4 +155,11 @@
 .fixed-bottom .button-group .button2{
   width: 50%;
   background-color:#b8b8b8;
+}
+
+.learn{
+  margin-top: 135rpx;
+  width: 100%;
+  height: 741rpx;
+  
 }

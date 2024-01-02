@@ -11,8 +11,10 @@
     <view class="field-item">
       <view class="label1">
           <view class="pre">
+          <image class="pre_png" src="../../images/重要.png"></image>
           <label class="field-label">优先级</label>
           </view>
+          
           <view class="next">
             <label class="field-control">
               <picker
@@ -25,9 +27,11 @@
             </label>
         </view>
       </view>
+      <view class="line"></view>
       <view class="score">
         <view class="s_pre">
-          <label class="s_field-label">积分</label>
+          <image class="score_icon" src="../../images/score_c.png"></image>
+          <text class="s_field-label">积分</text>
         </view>
         <view class="s_next">
           <label class="s_field-control">
@@ -38,16 +42,8 @@
     </view>
     <view class="line"></view>
 
-    <view class="field-item2">
-      <label class="field-label">描述</label>
-      <label class="field-control">
-        <textarea
-          class="field-input w-full"
-          placeholder="任务描述..."
-          bindinput="handleDescChange">
-        </textarea>
-      </label>
-    </view>
+    <image class="learn" src="../../images/学习.png" style="opacity:{{0.78}}"></image>
+    
   </view>
   <view class="fixed-bottom">
     <view class="button-group">
