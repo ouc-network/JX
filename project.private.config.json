@@ -1,7 +1,9 @@
 {
   "setting": {
-    "compileHotReLoad": true,
-    "urlCheck": false
+    "compileHotReLoad": false,
+    "urlCheck": false,
+    "preloadBackgroundData": false,
+    "bigPackageSizeSupport": false
   },
   "condition": {
     "miniprogram": {

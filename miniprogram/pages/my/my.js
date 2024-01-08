@@ -41,22 +41,22 @@ Page({
       key: 'openid',
       success: function (res) {
         openid = res.data
-      }
-    })
-    wx.cloud.database().collection('userdata').where({
-      //先是查询用户名是否存在
-      openid: openid
-    }).get({
-      success(res) {
-        // console.log("找到了");
-        score = res.data[0].score
-        task_number = res.data[0].task_number
-        task_number_done = res.data[0].task_number_done
-        console.log("找到了", task_number)
-        that.setData({
-          score: res.data[0].score,
-          task_number: res.data[0].task_number,
-          task_number_done: res.data[0].task_number_done
+        wx.cloud.database().collection('userdata').where({
+          //先是查询用户名是否存在
+          _openid: res.data
+        }).get({
+          success(res) {
+            // console.log("找到了");
+            score = res.data[0].score
+            task_number = res.data[0].task_number
+            task_number_done = res.data[0].task_number_done
+            console.log("找到了", task_number)
+            that.setData({
+              score: res.data[0].score,
+              task_number: res.data[0].task_number,
+              task_number_done: res.data[0].task_number_done
+            })
+          }
         })
       }
     })
@@ -74,19 +74,19 @@ Page({
     //getAPP().setWatcher(this.data, this.watch); // 设置监听
     //created()
     sum=[]
-    wx.cloud.database().collection('userdata').doc('09e78768658a586304d4a19d73b3c162').get({
+    wx.cloud.database().collection('userdata').where({_openid:openid}).get({
       success(res) {
         // console.log("找到了");
-        score = res.data.score
-        task_number = res.data.task_number
-        task_number_done = res.data.task_number_done
+        score = res.data[0].score
+        task_number = res.data[0].task_number
+        task_number_done = res.data[0].task_number_done
         console.log("找到了", task_number)
         that.setData({
-          score: res.data.score,
-          task_number: res.data.task_number,
-          task_number_done: res.data.task_number_done,
+          score: res.data[0].score,
+          task_number: res.data[0].task_number,
+          task_number_done: res.data[0].task_number_done,
         })
-        dateTimeArr = res.data.dateTime
+        dateTimeArr = res.data[0].dateTime
         // console.log("sum",res.data.dateTime,dateTimeArr)
         var dateArr = []
         for (var i = 1; i <= 12; i++) {
@@ -188,7 +188,7 @@ Page({
     let db = wx.cloud.database() //设置数据库
     var that = this
     db.collection('userdata').where({
-      openid: openid
+      _openid: openid
     }).watch({
       onChange: function (res) {
         console.log(res)

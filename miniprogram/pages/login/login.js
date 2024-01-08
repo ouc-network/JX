@@ -42,9 +42,7 @@ Page({
                 }
               });
               //获取到你的openid
-              console.log(openid);
-            }
-          })
+              console.log("openid",openid);
           // wx.cloud.database().collection('userdata').add({
           //   data: {
           //     openid: this.data.openid,
@@ -65,75 +63,105 @@ Page({
           // }).catch(err => {
           //   console.log('添加失败', err) //失败提示错误信息
           // })
-          if (openid == 'o37eI6xxr0JiNF2fIilUQb77NiIU') {
-            userCollection.add({
-              data: {
-                openid: this.data.openid,
-                score: 0,
-                task_number: 0,
-                //记录已经完成多少任务
-                task_number_done: 0,
-                //下面是任务相关内容
-                task_name: "",
-                task_score: 0,
-                task_time_begin: "",
-                task_time_done: "",
-                //记录是否完成任务，如果完成任务，则将对应值赋值为1
-                task_done: 0,
-              }
-            }).then(res => {
-              console.log('添加成功', res)
-            }).catch(err => {
-              console.log('添加失败', err) //失败提示错误信息
-            })
-          }
+          // var my='o37eI6xxr0JiNF2fIilUQb77NiIU'
+          // console.log("我的数据",my,openid)
+          // if (openid == my) {
+          //   // console.log("我自己")
+          //   wx.cloud.database().collection('userdata').add({
+          //     data: {
+          //       openid: openid,
+          //       score: 0,
+          //       task_number: 0,
+          //       //记录已经完成多少任务
+          //       task_number_done: 0,
+          //       //下面是任务相关内容
+          //       task_name: "",
+          //       task_score: 0,
+          //       task_time_begin: "",
+          //       task_time_done: "",
+          //       //记录是否完成任务，如果完成任务，则将对应值赋值为1
+          //       task_done: 0,
+          //     }
+          //   }).then(res => {
+          //     console.log('添加成功', res)
+          //   }).catch(err => {
+          //     console.log('添加失败', err) //失败提示错误信息
+          //   })
+          // }
+          var userid=openid
           wx.cloud.database().collection('userdata').where({
             //先是查询用户名是否存在
-            openid: this.data.openid
+            _openid:userid
           }).get({
             success(res) {
               console.log("获取数据成功", res)
-              console.log('')
-              wx.switchTab({
-                url: '/pages/todo/index',
-              })
-              // wx.navigateTo({
-              //     url: '/pages/index/index',
-              //   }),
-              wx.showToast({
-                title: '登陆成功',
-              })
+              // console.log('')
+              if(res.data.length==0)
+              {
+                wx.cloud.database().collection('userdata').add({
+                  data: {
+                    openid: openid,
+                    score: 0,
+                    task_number: 0,
+                    //记录已经完成多少任务
+                    task_number_done: 0,
+                    //下面是任务相关内容
+                    task_name: "",
+                    task_score: 0,
+                    task_time_begin: "",
+                    task_time_done: "",
+                    //记录是否完成任务，如果完成任务，则将对应值赋值为1
+                    task_done: 0,
+                  }
+                }).then(res => {
+                  console.log('添加成功', res)
+                }).catch(err => {
+                  console.log('添加失败', err) //失败提示错误信息
+                })
+              }
+              else
+              {
+                wx.setStorage({
+                  key: 'openid',
+                  data: {
+                    openid: this.data.openid
+                  },
+                  success: function () {
+                    console.log('设置缓存数据成功',);
+                    wx.switchTab({
+                      url: '/pages/todo/index',
+                    })
+                  }
+                });
+                // wx.navigateTo({
+                //     url: '/pages/index/index',
+                //   }),
+                wx.showToast({
+                  title: '登陆成功',
+                })
+              }
             },
             fail(res) {
-              userCollection.add({
-                data: {
-                  openid: this.data.openid,
-                  score: 0,
-                  task_number: 0,
-                  //记录已经完成多少任务
-                  task_number_done: 0,
-                  //下面是任务相关内容
-                  task_name: "",
-                  task_score: 0,
-                  task_time_begin: "",
-                  task_time_done: "",
-                  //记录是否完成任务，如果完成任务，则将对应值赋值为1
-                  task_done: 0,
-                }
-              }).then(res => {
-                console.log('添加成功', res)
-              }).catch(err => {
-                console.log('添加失败', err) //失败提示错误信息
-              })
-              // wx.setStorage({
-              //   key: 'openid',
+              // wx.cloud.database().collection('userdata').add({
               //   data: {
-              //     openid: this.data.openid
-              //   },
-              //   success: function () {
-              //     console.log('设置缓存数据成功',);
+              //     openid: openid,
+              //     score: 0,
+              //     task_number: 0,
+              //     //记录已经完成多少任务
+              //     task_number_done: 0,
+              //     //下面是任务相关内容
+              //     task_name: "",
+              //     task_score: 0,
+              //     task_time_begin: "",
+              //     task_time_done: "",
+              //     //记录是否完成任务，如果完成任务，则将对应值赋值为1
+              //     task_done: 0,
               //   }
-              // });
+              // }).then(res => {
+              //   console.log('添加成功', res)
+              // }).catch(err => {
+              //   console.log('添加失败', err) //失败提示错误信息
+              // })
               // wx.switchTab({
               //   url: '/pages/my/my?openid=' + this.data.openid,
               // })
@@ -142,6 +170,8 @@ Page({
               //   }),
             }
           })
+        }
+      })
         }
         //wx.setStorageSync('openid', openid);
         wx.switchTab({

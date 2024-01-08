@@ -12,6 +12,8 @@ var nowDate = new Date().getDate()
 //获取应用实例
 const app = getApp()
 const db = wx.cloud.database()
+var openid
+var flag
 
 Page({
   data: {
@@ -28,48 +30,35 @@ Page({
 
   onLoad() {
     var that = this
-    if (currentDate != nowDate || currentMonth != nowMonth || currentYear != nowYear) {
-      currentYear = nowYear
-      currentMonth = nowMonth
-      currentDate = nowDate
-      that.setData({
-        todos: [],
-        uncompletedCount: 0,
-        completedCount: 0
-      })
-      //修改对应数据库中的值
-      db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
-        data: {
-          task_number_done: that.data.completedCount,
-          task_number: that.data.uncompletedCount,
-          todos: this.data.todos
-        },
-        success(res) {
-          console.log("todos", res)
-        }
-      })
-      // console.log("todos")
-      // console.log("todos2",todos)
-    } else {
-      //没有到新一天，从数据库中获取值
-      db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").get({
-        success(res) {
-          that.setData({
-            uncompletedCount: res.data.task_number,
-            completedCount: res.data.task_number_done,
-            todos: res.data.todos
-          })
-          console.log(res)
-        }
-      })
-    }
+    wx.getStorage({
+          key: 'openid',
+          success: function (res) {
+            openid = res.data
+            db.collection('userdata').where({_openid:openid}).get({
+              success(res) {
+                that.setData({
+                  uncompletedCount: res.data[0].task_number,
+                  completedCount: res.data[0].task_number_done,
+                  todos: res.data[0].todos
+                })
+                todoStore.addTodos(res.data[0].todos)
+                console.log(todoStore.getTodos())
+              }
+            })
+            flag=1
+          }
+    })      
   },
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    // console.log(todoStore.getTodos())
     // 为了新建后列表能更新，此逻辑必须写在 onShow 事件
-    this.syncData()
+    if(flag==1)
+    {
+      this.syncData()
+    }
   },
 
   /**
@@ -90,12 +79,15 @@ Page({
    * 同步数据
    */
   syncData() {
+    console.log("todo1",this.data.todos)
     // 获取列表
+    var that=this
     this.data.todos = todoStore.getTodos()
-    this.update()
+    console.log("todo2",this.data.todos)
+    that.update()
     // 更新置顶标题
-    let uncompletedCount = todoStore.getUncompletedTodos().length
-    let todayCompletedCount = todoStore.getTodayCompletedTodos().length
+    let uncompletedCount = todoStore.getUncompletedTodos(that.data.todos).length
+    let todayCompletedCount = todoStore.getTodayCompletedTodos(that.data.todos).length
     let title = ['TodoList（进行中: ', uncompletedCount, ', 今日已完成: ', todayCompletedCount, '）'].join('')
     wx.setTopBarText({
       text: title
@@ -117,14 +109,14 @@ Page({
     let item = this.data.todos[index]
     if (todo.completed == true) {
       var score = 0
-      db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").get({
+      db.collection('userdata').where({_openid:openid}).get({
         success(res) {
-          score = res.data.score
+          score = res.data[0].score
           console.log("todos score", score)
           console.log("中间变量1", score, parseInt(todo.score))
           score = score + parseInt(todo.score)
           console.log("中间变量", parseInt(todo.score))
-          db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
+          db.collection('userdata').where({openid:openid}).update({
             data: {
               score: score
             },
@@ -136,12 +128,12 @@ Page({
       })
     } else {
       var score = 0
-      db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").get({
+      db.collection('userdata').where({_openid:openid}).get({
         success(res) {
-          score = res.data.score
+          score = res.data[0].score
           console.log("todos", score)
           score = score - parseInt(todo.score)
-          db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
+          db.collection('userdata').where({_openid:openid}).update({
             data: {
               score: score
             },
@@ -178,21 +170,24 @@ Page({
   /**
    * 更新数据
    */
-  update(data) {
-    data = data || this.data
-    data.completedCount = todoStore.getCompletedTodos().length
-    data.uncompletedCount = todoStore.getUncompletedTodos().length
+  update() {
+    var data = this.data
+    console.log("todosupdate", this.data.todos)
+    data.completedCount = todoStore.getCompletedTodos(data.todos).length
+    data.uncompletedCount = todoStore.getUncompletedTodos(data.todos).length
     this.setData(data)
     var that = this
-    db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
+    // console.log(openid)
+    console.log("todosupdate", that.data.todos)
+    db.collection('userdata').where({_openid:openid}).update({
       data: {
         task_number_done: that.data.completedCount,
         task_number: that.data.uncompletedCount,
-        todos: this.data.todos,
+        todos: that.data.todos,
         // score:score+todos.item.score
       },
       success(res) {
-        console.log("todosupdate", res)
+        console.log("todosupdate", that.data.todos)
       }
     })
   },

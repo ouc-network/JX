@@ -5,7 +5,7 @@ var dateTimeArr
 var dateArr = []
 var task_number
 var task_number_done
-var n=0
+var n = 0
 const db = wx.cloud.database()
 Page({
 
@@ -33,21 +33,22 @@ Page({
    */
   onLoad: function () {
     // dateArr = []
+    var that=this
     wx.getStorage({
       key: 'Calender',
       success: function (res) {
         openid = res.data
         console.log("Calender", openid)
+        var nowYear = new Date().getFullYear()
+        var nowMonth = new Date().getMonth()
+        var flag = dateArr[dateArr.length - 1] == that.data.nowDate ? true : false
+        // this.setData({
+        //   disabledFlag:flag
+        // })
+        wx.nextTick(() => {
+          that.getHabitInfo(nowYear, nowMonth)
+        })
       }
-    })
-    var nowYear = new Date().getFullYear()
-    var nowMonth = new Date().getMonth()
-    var flag = dateArr[dateArr.length-1] == this.data.nowDate ? true : false
-    // this.setData({
-    //   disabledFlag:flag
-    // })
-    wx.nextTick(() => {
-      this.getHabitInfo(nowYear, nowMonth)
     })
   },
   // 获取子组件的数据
@@ -65,26 +66,28 @@ Page({
     var that = this
     var flag
     n++
-    db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").get({
+    db.collection('userdata').where({
+      _openid: openid
+    }).get({
       success(res) {
         console.log("here month", res)
         // console.log("从数据库获取数据[res]===", res);
-        task_number = res.data.task_number
-        task_number_done = res.data.task_number_done
-        dateTimeArr = res.data.dateTime
+        task_number = res.data[0].task_number
+        task_number_done = res.data[0].task_number_done
+        dateTimeArr = res.data[0].dateTime
         // console.log("dateTimeArr", n)
         //获取了该用户的打卡天数数据
         //然后经过判断将数据添加到数据中，获取数组大小
-        dateArr=[]
+        dateArr = []
         dateTimeArr.forEach((item) => {
           // console.log("here",item)
           if (item.getFullYear() == year && item.getMonth() == month) {
             dateArr.push(item.getDate())
           }
         })
-        console.log(dateArr)
+        console.log("dateArr", dateArr)
         console.log(year, month + 1, that.data.nowDate)
-        
+
         // if (task_number == 0) {
         //   // 打卡按钮禁用的情况（1）页面初始化时，未点击任何日期（2）当前点击的日期在今天之后
         //   var flag = false
@@ -97,17 +100,16 @@ Page({
         // console.log(hereflag)
         // }
         // console.log("here flag")
-        var length=dateArr.length-1
+        var length = dateArr.length - 1
         var flag = false
         // console.log("flag",dateArr[length],that.data.nowDate)
-        if(dateArr[length] == that.data.nowDate)
-        {
+        if (dateArr[length] == that.data.nowDate) {
           console.log("ture")
-          flag=true
-        } 
-        console.log("here flag")
+          flag = true
+        }
+        console.log("here flag", dateTimeArr.length)
         that.setData({
-          habitInfo: res.data,
+          habitInfo: res.data[0],
           punchCardDateArr: dateArr,
           disabledFlag: flag,
           totalDays: dateTimeArr.length,
@@ -125,7 +127,9 @@ Page({
     //修改这里的逻辑使其能够更新打卡统计的数字，不行就不做了
     //在这里添加数据
     console.log(currentTime)
-    db.collection('userdata').doc("09e78768658a586304d4a19d73b3c162").update({
+    db.collection('userdata').where({
+      _openid: openid
+    }).update({
       data: {
         dateTime: db.command.push(currentTime)
       },

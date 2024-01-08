@@ -18,75 +18,76 @@ class TodoStore extends Store {
    */
   __init() {
     // wx.setStorageSync('__todos_inited__', false)
-    let isInited = wx.getStorageSync('__todos_inited__')
-    if (isInited) return
-    this.todos = this.todos.concat([new Todo({
-      title: '欢迎使用TodoList',
-      completed: false,
-      level: 1,
-      createdAt: new Date()
-    }), new Todo({
-      title: '点击左边勾选框完成一项任务',
-      completed: false,
-      level: 1,
-      createdAt: new Date()
-    }), new Todo({
-      title: '点击标题可以编辑任务哦',
-      completed: false,
-      level: 2,
-      createdAt: new Date()
-    }), new Todo({
-      title: '点击右边日期可修改日期',
-      completed: false,
-      level: 3,
-      createdAt: new Date()
-    }), new Todo({
-      title: '点击下面的 + 新建一项任务吧',
-      completed: false,
-      level: 4,
-      createdAt: new Date()
-    }), new Todo({
-      title: '长按可删除任务',
-      completed: false,
-      level: 4,
-      createdAt: new Date()
-    }), new Todo({
-      title: '这是一条已完成的任务1',
-      completed: true,
-      level: 4,
-      date: new Date('2017/11/18'),
-      createdAt: new Date(),
-      completedAt: new Date('2017/11/18')
-    }), new Todo({
-      title: '这是一条已完成的任务2',
-      completed: true,
-      level: 4,
-      date: new Date('2017/11/19'),
-      createdAt: new Date(),
-      completedAt: new Date('2017/11/19')
-    }), new Todo({
-      title: '这是一条已完成的任务3',
-      completed: true,
-      level: 4,
-      date: new Date('2017/11/20'),
-      createdAt: new Date(),
-      completedAt: new Date('2017/11/20')
-    }), new Todo({
-      title: '这是一条已完成的任务4',
-      completed: true,
-      level: 4,
-      date: new Date('2017/11/20'),
-      createdAt: new Date(),
-      completedAt: new Date('2017/11/20')
-    })])
-    this.save()
-    wx.setStorageSync('__todos_inited__', true)
+    // let isInited = wx.getStorageSync('__todos_inited__')
+    // if (isInited) return
+    // this.todos = this.todos.concat([new Todo({
+    //   title: '欢迎使用TodoList',
+    //   completed: false,
+    //   level: 1,
+    //   createdAt: new Date()
+    // }), new Todo({
+    //   title: '点击左边勾选框完成一项任务',
+    //   completed: false,
+    //   level: 1,
+    //   createdAt: new Date()
+    // }), new Todo({
+    //   title: '点击标题可以编辑任务哦',
+    //   completed: false,
+    //   level: 2,
+    //   createdAt: new Date()
+    // }), new Todo({
+    //   title: '点击右边日期可修改日期',
+    //   completed: false,
+    //   level: 3,
+    //   createdAt: new Date()
+    // }), new Todo({
+    //   title: '点击下面的 + 新建一项任务吧',
+    //   completed: false,
+    //   level: 4,
+    //   createdAt: new Date()
+    // }), new Todo({
+    //   title: '长按可删除任务',
+    //   completed: false,
+    //   level: 4,
+    //   createdAt: new Date()
+    // }), new Todo({
+    //   title: '这是一条已完成的任务1',
+    //   completed: true,
+    //   level: 4,
+    //   date: new Date('2017/11/18'),
+    //   createdAt: new Date(),
+    //   completedAt: new Date('2017/11/18')
+    // }), new Todo({
+    //   title: '这是一条已完成的任务2',
+    //   completed: true,
+    //   level: 4,
+    //   date: new Date('2017/11/19'),
+    //   createdAt: new Date(),
+    //   completedAt: new Date('2017/11/19')
+    // }), new Todo({
+    //   title: '这是一条已完成的任务3',
+    //   completed: true,
+    //   level: 4,
+    //   date: new Date('2017/11/20'),
+    //   createdAt: new Date(),
+    //   completedAt: new Date('2017/11/20')
+    // }), new Todo({
+    //   title: '这是一条已完成的任务4',
+    //   completed: true,
+    //   level: 4,
+    //   date: new Date('2017/11/20'),
+    //   createdAt: new Date(),
+    //   completedAt: new Date('2017/11/20')
+    // })])
+    // this.save()
+    // wx.setStorageSync('__todos_inited__', true)
   }
 
   /**
    * 获取 todos
    */
   getTodos() {
+    console.log(this.todos)
     return this.todos
   }
 
@@ -107,15 +108,15 @@ class TodoStore extends Store {
   /**
    * 获取未完成的 todos
    */
-  getUncompletedTodos () {
-    return this.todos.filter(item => !item.completed)
+  getUncompletedTodos (todos) {
+    return todos.filter(item => !item.completed)
   }
 
   /**
    * 获取已完成的 todos
    */
-  getCompletedTodos() {
-    return this.todos.filter(item => item.completed)
+  getCompletedTodos(todos) {
+    return todos.filter(item => item.completed)
   }
 
   /**
@@ -146,6 +147,13 @@ class TodoStore extends Store {
    */
   addTodo(todo) {
     this.todos.push(todo)
+  }
+
+  addTodos(todos) {
+    // console.log("store",todos)
+    this.todos=this.todos.concat(todos)
+    console.log("store",this.todos)
+    wx.setStorageSync(this.key, this.todos)
   }
 
   /**
@@ -198,6 +206,7 @@ class TodoStore extends Store {
    * 保存
    */
   save() {
+    // console.log("save",this.todos)
     wx.setStorageSync(this.key, this.todos)
   }
 }
